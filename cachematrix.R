@@ -7,7 +7,17 @@
 ## be inverted using cacheSolve
 
 makeCacheMatrix <- function(x = matrix()) {
-
+  i <- NULL
+  set <- function(y) {
+    x <<- y
+    i <<- NULL
+  }
+  get <- function() x
+  setinverse <- function(inverse) i <<- inverse
+  getinverse <- function() i
+  list(set = set, get = get,
+       setInverse = setinverse,
+       getInverse = getinverse)
 }
 
 
@@ -18,5 +28,16 @@ makeCacheMatrix <- function(x = matrix()) {
 ## and caches the result for next time.
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+  ## Look for the value of the cached value
+  m <- x$getInverse()
+  if(!is.null(m)) {
+    message("getting cached data")
+    return(m)
+  }
+  ## If not, return a matrix that is the inverse
+  ## of 'x'
+  data <- x$get()
+  i <- solve(data)
+  x$setInverse(i)
+  i
 }
